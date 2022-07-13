@@ -12,8 +12,8 @@ $Configuration
 {	
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\server;$SRCDIR\game\shared;$SRCDIR\game\shared\ms;..\..\thirdparty"
-		$PreprocessorDefinitions		"$BASE;NOT_HLDLL"
+		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\server;$SRCDIR\game\shared;$SRCDIR\game\shared\ms;$SRCDIR\game\shared\http;..\..\thirdparty"
+		$PreprocessorDefinitions		"$BASE;NOT_HLDLL;USES_HTTPLIB"
 		$PreprocessorDefinitions		"$BASE;SWDS" [$POSIX]
 	}
 
@@ -30,7 +30,7 @@ $Project "charimport"
 		$File "$SRCDIR\game\shared\ms\msfileio.cpp"
 		$File "$SRCDIR\game\shared\ms\stackstring.cpp"
 		$File "..\..\thirdparty\base64\base64.cpp"
-		$File "$SRCDIR\game\shared\ms\httprequesthandler.cpp"
+		$File "$SRCDIR\game\shared\http\SimpleRequestHandler.cpp"
 		$File "charimport.cpp"
 	}
 }

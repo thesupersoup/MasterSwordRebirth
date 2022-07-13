@@ -44,7 +44,7 @@
 #include "global.h"
 #include "versioncontrol.h"
 
-#include "fndatahandler.h"
+#include "SteamHttpRequest.h"
 
 extern void PlayerPrecache();
 
@@ -236,7 +236,7 @@ void ClientPutInServer(edict_t *pEntity)
 	logfile << Logger::LOG_INFO << msg;
 
 	// Read Profile from FN, if possible.
-	pPlayer->steamID64 = FnDataHandler::GetSteamID64(GETPLAYERAUTHID(pEntity));
+	pPlayer->steamID64 = UTIL_ComputeSteamID64(GETPLAYERAUTHID(pEntity));
 
 	// Allocate a CBasePlayer for pev, and call spawn
 	pPlayer->Spawn();
@@ -1674,13 +1674,10 @@ void ServerDeactivate(void)
 		g_pGameRules->EndMultiplayerGame();
 
 	dbg("Call MSGameEnd");
-	MSGameEnd();	
+	MSGameEnd();
 
-	dbg("Call SteamHelper::Shutdown");
-	SteamHelper::Shutdown();
-
-	dbg("Call FnDataHandler::Reset");
-	FnDataHandler::Reset();
+	dbg("Call SteamHttpRequest::SendAndWait");
+	SteamHttpRequest::SendAndWait();
 
 	dbg("End");
 	enddbg;
@@ -1757,11 +1754,11 @@ void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 	}
 
 	CSVGlobals::WriteScriptLog();
-	FnDataHandler::Reset();
-	SteamHelper::Initialize();
 
 	logfile << Logger::LOG_INFO << "World Activate END\n";
 	enddbg;
+
+	SteamHelper::Initialize();
 }
 
 /*

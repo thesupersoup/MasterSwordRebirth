@@ -333,8 +333,6 @@ $Project "Client"
 	
 	$Folder	"Shared"
 	{
-		$File "$SRCDIR\game\shared\steamhelper.cpp"
-		$File "$SRCDIR\game\shared\steamhelper.h"	
 		$File "$SRCDIR\game\shared\strhelper.cpp"
 		$File "$SRCDIR\game\shared\strhelper.h"	
 		$File "$SRCDIR\game\shared\ms\buildcontrol.h"

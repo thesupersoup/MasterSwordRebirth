@@ -9,9 +9,8 @@
 #include "store.h"
 #include "versioncontrol.h"
 #include "cstringpool.h"
-#include "fndatahandler.h"
-#include "httprequesthandler.h"
-#include "crc/crchash.h"
+#include "SteamHttpRequest.h"
+#include "FNShareddefs.h"
 
 ofstream modelout;
 int HighestPrecache = -1;
@@ -120,30 +119,6 @@ bool MSGlobalInit() //Called upon DLL Initialization
 	return true;
 }
 
-static bool IsVerifiedMap()
-{
-	if (FnDataHandler::IsEnabled())
-	{
-		char mapfile[MAX_PATH];
-		_snprintf(mapfile, sizeof(mapfile), "%s/maps/%s.bsp", MSGlobals::AbsGamePath.c_str(), MSGlobals::MapName.c_str());
-		if (!FnDataHandler::IsVerifiedMap(MSGlobals::MapName.c_str(), GetFileCheckSum(mapfile)))
-			return false;
-	}
-	return true;
-}
-
-static bool IsVerifiedSC()
-{
-	if (FnDataHandler::IsEnabled())
-	{
-		char scfile[MAX_PATH];
-		_snprintf(scfile, sizeof(scfile), "%s/dlls/sc.dll", MSGlobals::AbsGamePath.c_str());
-		if (!FnDataHandler::IsVerifiedSC(GetFileCheckSum(scfile)))
-			return false;
-	}
-	return true;
-}
-
 //Called from CWorld::Spawn() each map change
 void MSWorldSpawn()
 {
@@ -186,47 +161,23 @@ void MSWorldSpawn()
 	ENGINE_FORCE_UNMODIFIED(force_exactfile, NULL, NULL, "cl_dlls/client.dylib");
 	ENGINE_FORCE_UNMODIFIED(force_exactfile, NULL, NULL, "dlls/sc.dll");
 	
-	if (FnDataHandler::IsEnabled())
-		HTTPRequestHandler::Initialize(CVAR_GET_STRING("ms_central_addr"));
-
-	if (FnDataHandler::IsValidConnection())
-	{
-		g_engfuncs.pfnServerPrint("FuzzNet connected!\n");
-		logfile << Logger::LOG_INFO << "FuzzNet connected\n";
-	}
-	else if (MSGlobals::CentralEnabled)
-	{
-		g_engfuncs.pfnServerPrint("FuzzNet connection failed.\n");
-		logfile << Logger::LOG_INFO << "FuzzNet connection failed\n";
-		//we set this to false so it doesn't keep trying to make requests to via FN
-		MSGlobals::CentralEnabled = false;
-	}
-
-	if (!IsVerifiedMap())
-	{
-		ALERT(at_console, "Map '%s' is not verified for FN!\n", MSGlobals::MapName.c_str());
-		SERVER_COMMAND("changelevel edana\n");
-	}
-
-	if (!IsVerifiedSC())
-	{
-		ALERT(at_console, "Script file not verified for FN!\n");
-		SERVER_COMMAND("exit\n"); // we want to quit to prevent cheaters
-	}
+	SteamHttpRequest::SetBaseUrl(CVAR_GET_STRING("ms_central_addr"));
+	FNShared::Validate();
 }
 
 //Called every frame
 void MSGameThink()
 {
 	startdbg;
-	dbg("Call FnDataHandler::Think");
-	FnDataHandler::Think();
+	dbg("Call SteamHttpRequest::Think");
+	SteamHttpRequest::Think();
 	enddbg;
 }
 
 //Called when the map changes or server is shutdown from ServerDeactivate
 //Note that ClientDisconnect is called after this, and the player is deallocated again!
 #define WORLD_MAX 6000
+
 void MSGameEnd()
 {
 	startdbg;

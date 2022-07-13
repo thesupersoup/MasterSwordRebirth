@@ -9,7 +9,7 @@
 #include <conio.h>
 #include "groupfile.h"
 #include "msfileio.h"
-#include "httprequesthandler.h"
+#include "SimpleRequestHandler.h"
 #include "rapidjson/document_safe.h"
 #include "base64/base64.h"
 

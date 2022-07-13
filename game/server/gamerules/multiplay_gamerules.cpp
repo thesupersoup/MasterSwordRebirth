@@ -28,6 +28,7 @@
 #include	"global.h"
 #include	"svglobals.h"
 #include	"mscharacter.h"
+#include	"FNShareddefs.h"
 
 extern DLL_GLOBAL CGameRules	*g_pGameRules;
 extern DLL_GLOBAL BOOL	g_fGameOver;
@@ -563,6 +564,9 @@ void CHalfLifeMultiplay :: ClientDisconnected( edict_t *pClient )
 
 	if( pPlayer && pPlayer->IsPlayer() )
 	{
+		if (FNShared::IsEnabled())
+			pPlayer->SaveChar(); // Save data on disconnect! TODO: should this count for non-FN as well?
+
 		FireTargets( "game_playerleave", pPlayer, pPlayer, USE_TOGGLE, 0 );
 
 		//Thothie JUN2007a - attempting to make sure next client takes slot #1

@@ -24,9 +24,8 @@
 #include <unistd.h>
 #endif
 
-#include "fndatahandler.h"
-#include "httprequesthandler.h"
 #include "steamhelper.h"
+#include "SteamHttpRequest.h"
 
 cvar_t displaysoundlist = { "displaysoundlist", "0" };
 cvar_t mapcyclefile = { "mapcyclefile", "mapcycle.txt" };
@@ -133,16 +132,12 @@ void GameDLLInit(void)
 		g_engfuncs.pfnServerCommand("exit\n");
 		return;
 	}
-	
-	FnDataHandler::Initialize();
 }
 
 void GameDLLShutdown()
 {
+	SteamHttpRequest::SendAndWait();
 	g_pTempStringLimit[0] = 0;
 	ScriptMgr::GameShutdown();
-	FileSystem_Shutdown();
-	FnDataHandler::Destroy();
-	SteamHelper::Shutdown();
-	HTTPRequestHandler::Destroy();
+	FileSystem_Shutdown();	
 }
