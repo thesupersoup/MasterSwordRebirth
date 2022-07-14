@@ -40,16 +40,7 @@ void SteamHelper::Think()
 		s_SteamAPIContext.Init();
 		s_SteamGameServerAPIContext.Init();
 
-		if (steamgameserverapicontext->SteamGameServer())
-		{
-			g_engfuncs.pfnServerPrint("\nInitialized Steam GameServer Handler!\n");
-			steamhttpcontext = steamgameserverapicontext->SteamHTTP();
-		}
-		else if (steamapicontext->SteamUser())
-		{
-			g_engfuncs.pfnServerPrint("\nInitialized Steam Client Handler!\n");
-			steamhttpcontext = steamapicontext->SteamHTTP();
-		}
+		steamhttpcontext = (IS_DEDICATED_SERVER() ? steamgameserverapicontext->SteamHTTP() : steamapicontext->SteamHTTP());
 	}
 }
 
@@ -57,6 +48,7 @@ void SteamHelper::RunCallbacks()
 {
 	if (steamgameserverapicontext->SteamHTTP())
 		SteamGameServer_RunCallbacks();
-	else if (steamapicontext->SteamHTTP())
+
+	if (steamapicontext->SteamHTTP())
 		SteamAPI_RunCallbacks();
 }

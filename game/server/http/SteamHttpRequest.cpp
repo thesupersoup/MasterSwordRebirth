@@ -52,8 +52,8 @@ SteamHttpRequest::SteamHttpRequest(EHTTPMethod method, const char* url, uint8* b
 	_snprintf(pchApiUrl, REQUEST_URL_SIZE, "%s%s", g_szBaseUrl, url);
 
 	requestBody = responseBody = NULL;
-	pJSONData = NULL;
 	requestBodySize = responseBodySize = 0;
+	pJSONData = NULL;
 	handle = NULL;
 
 	this->param1 = param1;
@@ -129,28 +129,29 @@ void SteamHttpRequest::Cleanup()
 	delete pJSONData;
 	pJSONData = NULL;
 
+	ReleaseHandle();
+}
+
+void SteamHttpRequest::ReleaseHandle()
+{
 	if (handle)
 	{
 		steamhttpcontext->ReleaseHTTPRequest(handle);
 		handle = NULL;
 	}
-
 	requestState = REQUEST_FINISHED;
 }
 
 void SteamHttpRequest::OnHTTPRequestCompleted(HTTPRequestCompleted_t* p, bool bError)
 {
-	if (g_bSuppressResponse)
+	if (g_bSuppressResponse || (handle == NULL) || (p == NULL) || (p->m_hRequest != handle))
 	{
-		requestState = REQUEST_FINISHED;
+		ReleaseHandle();
 		return;
 	}
 
-	if ((handle == NULL) || (p == NULL) || (p->m_hRequest != handle))
-		return;
-
 	size_t unBytes = 0;
-	if (!bError && steamhttpcontext->GetHTTPResponseBodySize(handle, &unBytes) && (unBytes != 0))
+	if (!bError && (responseBody == NULL) && steamhttpcontext->GetHTTPResponseBodySize(handle, &unBytes) && (unBytes != 0))
 	{
 		responseBodySize = unBytes;
 		responseBody = new uint8[responseBodySize];
@@ -162,8 +163,7 @@ void SteamHttpRequest::OnHTTPRequestCompleted(HTTPRequestCompleted_t* p, bool bE
 		FNShared::Print("Error: %s '%s'\n", GetName(), pchApiUrl);
 
 	OnResponse(bError == false);
-
-	requestState = REQUEST_FINISHED;
+	ReleaseHandle();
 }
 
 /*static*/ void SteamHttpRequest::SetBaseUrl(const char* url)
@@ -179,7 +179,6 @@ void SteamHttpRequest::OnHTTPRequestCompleted(HTTPRequestCompleted_t* p, bool bE
 	for (int i = (g_vRequests.size() - 1); i >= 0; i--)
 	{
 		SteamHttpRequest* req = g_vRequests[i];
-
 		switch (req->requestState)
 		{
 		case REQUEST_QUEUED:
@@ -209,6 +208,6 @@ extern void wait(unsigned long ms);
 	} while ((steamhttpcontext != NULL) && g_vRequests.size());
 
 	g_vRequests.clear();
-	g_bSuppressResponse = false;
 	SteamHelper::Shutdown();
+	g_bSuppressResponse = false;
 }

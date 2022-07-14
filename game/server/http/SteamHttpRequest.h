@@ -52,6 +52,7 @@ protected: // Expose data to inheriting classes.
 private: // Keep this private.
 	void SendRequest();
 	void Cleanup();
+	void ReleaseHandle();
 	void OnHTTPRequestCompleted(HTTPRequestCompleted_t* p, bool bError);
 
 	CCallResult<SteamHttpRequest, HTTPRequestCompleted_t> m_CallbackOnHTTPRequestCompleted;
