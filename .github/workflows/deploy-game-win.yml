@@ -4,29 +4,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  runs-on: windows-latest
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v2
 
-  steps:
-    - uses: actions/checkout@v2
+      - name: generate project files
+        run: ./createall-vs2022.bat
 
-    - name: generate project files
-      run: ./createall-vs2022.bat
+      - name: add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '17.3'
+          msbuild-architecture: x86
 
-    - name: add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
-      with:
-        vs-version: '17.3'
-        msbuild-architecture: x86
+      - name: build client
+        run: msbuild game/client/client.vcxproj -property:Configuration=Release
 
-    - name: build client
-      run: msbuild game/client/client.vcxproj -property:Configuration=Release
+      - name: build server
+        run: msbuild game/server/server.vcxproj -property:Configuration=Release
 
-    - name: build server
-      run: msbuild game/server/server.vcxproj -property:Configuration=Release
-
-    - name: Upload Binaries
-      uses: actions/upload-artifact@v2
-      with:
-        name: windows binaries
-        path: |
-          build/*.dll
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows binaries
+          path: |
+            build/*.dll
