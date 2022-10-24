@@ -1,10 +1,10 @@
 name: deploy game for win32
 
 on:
-	workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
-	runs-on: windows-latest
+  runs-on: windows-latest
 
   steps:
     - uses: actions/checkout@v2
