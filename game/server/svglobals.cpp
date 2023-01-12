@@ -55,7 +55,7 @@ cvar_t msvote_ban_enable = {"msvote_ban_enable", "1", FCVAR_SERVER};			 //Thothi
 cvar_t msvote_ban_time = {"msvote_ban_time", "60", FCVAR_SERVER};				 //Thothie FEB2008a - Time to ban a person voted banned
 cvar_t msvote_pvp_enable = {"msvote_pvp_enable", "60", FCVAR_SERVER};			 //Thothie FEB2008a - Allow voting for PVP
 cvar_t msvote_lock_enable = {"msvote_lock_enable", "1", FCVAR_SERVER};			 //Thothie JAN2011_04 - Allow voting to password lock server
-cvar_t ms_chatlog = {"ms_chatlog", "0", FCVAR_SERVER};							 //Thothie FEB2008a - write chatlog
+cvar_t ms_chatlog = {"ms_chatlog", "1", FCVAR_SERVER};							 //Thothie FEB2008a - write chatlog
 cvar_t ms_admin_contact = {"ms_admin_contact", "[none provided]", FCVAR_SERVER}; //Thothie FEB2008a - server host contact info
 cvar_t ms_ban_to_cfg = {"ms_ban_to_cfg", "1", FCVAR_SERVER};					 //Thothie FEB2008a - write scriptside perm bans to server/listenserver.cfg
 cvar_t ms_central_enabled = {"ms_central_enabled", "0", FCVAR_SERVER};
@@ -63,7 +63,7 @@ cvar_t ms_fake_hp = {"ms_fake_hp", "0", FCVAR_SERVER};			 //Thothie AUG2011_17 -
 cvar_t ms_fake_players = {"ms_fake_players", "0", FCVAR_SERVER}; //Thothie DEC2013_07 - for returning false # of players for some functions during testing
 cvar_t ms_central_addr = {"ms_central_addr", "0", FCVAR_PROTECTED};
 cvar_t ms_debug_mem = {"ms_debug_mem", "0", 0};
-cvar_t ms_crashcfg = {"ms_crashcfg", "crashed", FCVAR_SERVER};
+//cvar_t ms_crashcfg = {"ms_crashcfg", "crashed", FCVAR_SERVER};
 
 #ifdef DEV_BUILD
 cvar_t ms_devlog = {"ms_devlog", "1", 0};
@@ -108,7 +108,7 @@ bool MSGlobalInit() //Called upon DLL Initialization
 	CVAR_REGISTER(&ms_debug_mem);
 	CVAR_REGISTER(&ms_fake_hp);		 //AUG2011_17 Thothie - moving fakehp functions to cvar
 	CVAR_REGISTER(&ms_fake_players); //DEC2013_07 Thothie - fake players cvar
-	CVAR_REGISTER(&ms_crashcfg);
+	//CVAR_REGISTER(&ms_crashcfg);
 
 #ifdef DEV_BUILD
 	CVAR_REGISTER(&ms_devlog);
