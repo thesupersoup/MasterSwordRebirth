@@ -383,7 +383,8 @@ $Project "Client"
 
 		$Folder "AngelScript"
 		{
-			$File "$SRCDIR\game\shared\ms\angelscript\casengine.h"
+			$File "$SRCDIR\game\shared\ms\angelscript\casmanager.h"
+			$File "$SRCDIR\game\shared\ms\angelscript\casmanager.cpp"
 			$File "$SRCDIR\game\shared\ms\angelscript\addon\scriptbuilder.cpp"
 			$File "$SRCDIR\game\shared\ms\angelscript\addon\scriptbuilder.h"
 			$File "$SRCDIR\game\shared\ms\angelscript\addon\scriptmath.cpp"
