@@ -50,12 +50,35 @@ void CASManager::RegisterAPI()
 
 void CASManager::OnMessageCallback(const asSMessageInfo* msg)
 {
+	const char *type;
+
+	switch(msg->type)
+	{
+	case asEMsgType::asMSGTYPE_ERROR:
+		type = "ERR";
+		break;
+	case sEMsgType::asMSGTYPE_WARNING:
+		type = "WARN";
+		break;
+	default:
+	case asEMsgType::asMSGTYPE_INFORMATION:
+		type = "INFO";
+		break;
+	}
+
 	// The engine will often log information not related to a script by passing an empty section string and 0, 0 for the location.
 	// Only prepend this information if it's relevant.
+	char buffer[1024];
 	if (msg->section && '\0' != msg->section[0])
-		//"In section \"{}\" at line {}, column {}: {}", msg->section, msg->row, msg->col, msg->message
+	{
+		snprintf(buffer, 1024, "%s: In section %s, %d:%d - %s", type, msg->section, msg->row, msg->message);
+		ALERT(at_console, buffer);
+	}
 	else
-		//"{}", msg->message
+	{
+		snprintf(buffer, 1024, "%s: %s", type, msg->message);
+		ALERT(at_console, buffer);
+	}
 }
 
 void CASManager::OnTranslateAppExceptionCallback(asIScriptContext* context)
