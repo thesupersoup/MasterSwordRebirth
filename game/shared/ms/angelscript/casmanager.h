@@ -6,21 +6,23 @@
 class CASManager
 {
 public:
-	CASManager();
-	~CASManager();
+	CASManager(){ };
+	~CASManager(){ };
 
 	bool Initialize();
 	void PostInitalize();
 	void Shutdown();
 
-	*asIScriptEngine GetEngine(){ return m_ASEngine };
-	*CGameGroupFile GetGroupFile(){ return m_GroupFile };
+	*asIScriptEngine GetEngine(){ return m_ASEngine; };
+	*asIScriptContext GetContext(){ return m_ASContext; };
+	*CGameGroupFile GetGroupFile(){ return m_GroupFile; };
 
 	void RegisterAddons();
 	void RegisterAPI();
 
 private:
 	asIScriptEngine *m_ASEngine;
+	asIScriptContext *m_ASContext;
 	CGameGroupFile *m_GroupFile;
 
 	void OnMessageCallback(const asSMessageInfo* msg);
