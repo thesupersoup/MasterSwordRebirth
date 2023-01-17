@@ -4,6 +4,9 @@
 #include <memory>
 #include <string>
 
+#include "extdll.h"
+#include "util.h"
+
 #include "casbasemodulebuilder.h"
 
 CASBaseModuleBuilder::CASBaseModuleBuilder( std::string&& szBasePath, std::string&& szModuleTypeName )
