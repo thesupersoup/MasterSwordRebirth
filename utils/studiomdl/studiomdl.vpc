@@ -1,0 +1,39 @@
+//-----------------------------------------------------------------------------
+//	STUDIOMDL.VPC - Compiler which generates exe to create a list of map hashes.
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\.."
+$Macro OUTBINDIR	"$SRCDIR\build"
+
+$Include "$SRCDIR\vpc_scripts\source_exe_con_base.vpc"
+
+$Configuration
+{	
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\server;$SRCDIR\game\shared;$SRCDIR\game\shared\ms;..\..\thirdparty"
+		$PreprocessorDefinitions		"$BASE;NOT_HLDLL"
+		$PreprocessorDefinitions		"$BASE;SWDS" [$POSIX]
+	}
+
+	$Linker
+	{
+		$AdditionalDependencies				"$BASE ws2_32.lib odbc32.lib odbccp32.lib winmm.lib wsock32.lib" [$WIN32]
+	}
+}
+
+$Project "studiomdl"
+{
+	$Folder	"Source Files"
+	{
+		$File "$SRCDIR\engine\studio.h"
+		$File "$SRCDIR\game\server\activity.h"
+		$File "$SRCDIR\game\server\activitymap.h"
+		$File "bmpread.cpp"
+		$File "studiomdl.cpp"
+		$File "studiomdl.h"
+		$File "tristrip.cpp"
+		$File "write.cpp"
+	}
+}
