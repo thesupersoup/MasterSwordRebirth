@@ -35,5 +35,5 @@ $Project "charimport"
 
 $Project "studiomdl"
 {
-	"utils\charimport\studiomdl.vpc" [$WIN32]
+	"utils\studiomdl\studiomdl.vpc" [$WIN32]
 }
