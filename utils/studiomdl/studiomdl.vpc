@@ -27,9 +27,9 @@ $Project "studiomdl"
 {
 	$Folder	"Source Files"
 	{
-		$File "$SRCDIR\engine\studio.h"
 		$File "$SRCDIR\game\server\activity.h"
-		$File "$SRCDIR\game\server\activitymap.h"
+		$File "activitymap.h"
+		$File "studio.h"
 		$File "bmpread.cpp"
 		$File "studiomdl.cpp"
 		$File "studiomdl.h"

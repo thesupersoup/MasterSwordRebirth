@@ -15,4 +15,5 @@ $Group "msc"
 	"scriptpack"
 	"maphash"
 	"charimport"
+	"studiomdl"
 }
