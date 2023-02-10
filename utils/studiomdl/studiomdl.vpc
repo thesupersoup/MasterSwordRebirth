@@ -12,7 +12,7 @@ $Configuration
 {	
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\server;$SRCDIR\game\shared;$SRCDIR\game\shared\ms;$SRCDIR\utils\common;..\..\thirdparty"
+		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\server;$SRCDIR\utils\common"
 		$PreprocessorDefinitions		"$BASE;NOT_HLDLL"
 		$PreprocessorDefinitions		"$BASE;SWDS" [$POSIX]
 	}
@@ -27,14 +27,6 @@ $Project "studiomdl"
 {
 	$Folder	"Source Files"
 	{
-		$File "$SRCDIR\utils\common\cmdlib.h"
-		$File "$SRCDIR\utils\common\cmdlib.cpp"
-		$File "$SRCDIR\utils\common\lbmlib.h"
-		$File "$SRCDIR\utils\common\lbmlib.cpp"
-		$File "$SRCDIR\utils\common\scriplib.h"
-		$File "$SRCDIR\utils\common\scriplib.cpp"
-		$File "$SRCDIR\utils\common\mathlib.h"
-		$File "$SRCDIR\utils\common\mathlib.cpp"
 		$File "$SRCDIR\game\server\activity.h"
 		$File "activitymap.h"
 		$File "studio.h"
@@ -43,5 +35,17 @@ $Project "studiomdl"
 		$File "studiomdl.h"
 		$File "tristrip.cpp"
 		$File "write.cpp"
+
+		$Folder "common"
+		{
+			$File "$SRCDIR\utils\common\cmdlib.h"
+			$File "$SRCDIR\utils\common\cmdlib.cpp"
+			$File "$SRCDIR\utils\common\lbmlib.h"
+			$File "$SRCDIR\utils\common\lbmlib.cpp"
+			$File "$SRCDIR\utils\common\scriplib.h"
+			$File "$SRCDIR\utils\common\scriplib.cpp"
+			$File "$SRCDIR\utils\common\mathlib.h"
+			$File "$SRCDIR\utils\common\mathlib.cpp"
+		}
 	}
 }

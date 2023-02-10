@@ -23,8 +23,6 @@ STUDIO MODELS
 Studio models are position independent, so the cache manager can move them.
 ==============================================================================
 */
-
-
 #define MAXSTUDIOTRIANGLES 20000 // TODO: tune this
 #define MAXSTUDIOVERTS 2048		 // TODO: tune this
 #define MAXSTUDIOSEQUENCES 2048	 // total animation sequences -- KSH incremented
@@ -48,12 +46,12 @@ typedef struct
 	char name[64];
 	int length;
 
-	Vector eyeposition; // ideal eye position
-	Vector min;			// ideal movement hull size
-	Vector max;
+	vec3_t eyeposition; // ideal eye position
+	vec3_t min;			// ideal movement hull size
+	vec3_t max;
 
-	Vector bbmin; // clipping bounding box
-	Vector bbmax;
+	vec3_t bbmin; // clipping bounding box
+	vec3_t bbmax;
 
 	int flags;
 
@@ -133,8 +131,8 @@ typedef struct
 {
 	int bone;
 	int group;	  // intersection group
-	Vector bbmin; // bounding box
-	Vector bbmax;
+	vec3_t bbmin; // bounding box
+	vec3_t bbmax;
 } mstudiobbox_t;
 
 #if !defined(CACHE_USER) && !defined(QUAKEDEF_H)
@@ -177,12 +175,12 @@ typedef struct
 
 	int motiontype;
 	int motionbone;
-	Vector linearmovement;
+	vec3_t linearmovement;
 	int automoveposindex;
 	int automoveangleindex;
 
-	Vector bbmin; // per sequence bounding box
-	Vector bbmax;
+	vec3_t bbmin; // per sequence bounding box
+	vec3_t bbmax;
 
 	int numblends;
 	int animindex; // mstudioanim_t pointer relative to start of sequence group data
@@ -217,7 +215,7 @@ typedef struct
 // pivots
 typedef struct
 {
-	Vector org; // pivot point
+	vec3_t org; // pivot point
 	int start;
 	int end;
 } mstudiopivot_t;
@@ -228,8 +226,8 @@ typedef struct
 	char name[32];
 	int type;
 	int bone;
-	Vector org; // attachment point
-	Vector vectors[3];
+	vec3_t org; // attachment point
+	vec3_t vectors[3];
 } mstudioattachment_t;
 
 typedef struct
