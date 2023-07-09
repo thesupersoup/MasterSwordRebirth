@@ -267,9 +267,10 @@ void CStatPanel::Update()
 	}
 
 	bool FOUND_PARRY = false;
+	FOUND_PARRY = FOUND_PARRY || msstring(SkillStatList[i].Name) == "Parry";
+
 	for (int i = 0; i < SKILL_MAX_STATS; i++)
 	{
-		FOUND_PARRY = FOUND_PARRY || msstring(SkillStatList[i].Name) == "Parry";
 		bool blank = i == SKILL_MAX_STATS - 1;
 		int real_idx = FOUND_PARRY ? i + 1 : i;
 		if (!blank)
@@ -306,9 +307,16 @@ void CStatPanel::Update()
 	{
 		int Height = SKILLINFOPANEL_TITLE_Y + SKILLINFOPANEL_TITLE_H + SKILLINFOPANEL_BTM_BORDERSPACER_H;
 		int UnusedSlots = 0;
-		for (int i = 0; i < STAT_MAGIC_TOTAL; i++)
+		int iSubStats = pStat->m_SubStats.size();
+		int totalSubSkills = STATPROP_TOTAL;
+
+		if (SKILL_FIRSTSKILL + m_ActiveStat == SKILL_SPELLCASTING)
+			totalSubSkills = STAT_MAGIC_TOTAL;
+		else if (SKILL_FIRSTSKILL + m_ActiveStat == SKILL_NONCOMBAT)
+			totalSubSkills = STAT_NCSKILL_TOTAL;
+
+		for (int i = 0; i < totalSubSkills; i++)
 		{
-			int iSubStats = pStat->m_SubStats.size();
 			if (i >= iSubStats)
 			{
 				m_StatTypeLabel[i]->setVisible(false);
@@ -330,7 +338,9 @@ void CStatPanel::Update()
 				Percent = 0.0;
 
 			msstring_ref Name = "";
-			if (iSubStats <= STATPROP_TOTAL)
+			if (SKILL_FIRSTSKILL + m_ActiveStat == SKILL_NONCOMBAT)
+				Name = NCSkillList[i];
+			else if (iSubStats <= STATPROP_TOTAL)
 				Name = SkillTypeList[i];
 			else
 				Name = SpellTypeList[i];

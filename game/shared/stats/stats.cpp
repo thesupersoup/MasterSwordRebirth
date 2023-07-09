@@ -14,7 +14,7 @@ statinfo_t NatStatList[6] =
 	{"Wisdom"},
 };
 
-skillstatinfo_t SkillStatList[9] =
+skillstatinfo_t SkillStatList[10] =
 {
 	{"Swordsmanship", "swordsmanship", STATPROP_TOTAL},
 	{"Martial Arts", "martialarts", STATPROP_TOTAL},
@@ -28,6 +28,7 @@ skillstatinfo_t SkillStatList[9] =
 	{"Spell Casting", "spellcasting", STAT_MAGIC_TOTAL},
 	{"Parry", "parry", 1},
 	{"Pole Arms", "polearms", STATPROP_TOTAL}, // MiB JUL2010_02 - Pole Arms!
+	{"Trade Skills", "noncombat", STAT_NCSKILL_TOTAL}
 	//	"Spell Preparation",
 	//	"Swimming",
 	//	"Pickpocket", true,
@@ -47,6 +48,22 @@ char* SpellTypeList[5] =
 	"Lightning",
 	"Divination",
 	"Affliction",
+};
+
+char* NCSkillList[12] =
+{
+	"Woodcutting",
+	"Mining",
+	"Crafting",
+	"Blacksmithing",
+	"Apothecary",
+	"Foraging",
+	"Tracking",
+	"Fateweaving",
+	"Fletching",
+	"Thieving",
+	"Bardic Lore",
+	"Bartering",
 };
 
 int GetSkillStatByName(const char* pszName) // Index lookup by name (Skill stats only)
@@ -75,6 +92,9 @@ int GetSubSkillByName(const char* pszName)
 			return i;
 	for (int i = 0; i < STAT_MAGIC_TOTAL; i++)
 		if (!stricmp(pszName, SpellTypeList[i]))
+			return i;
+	for (int i = 0; i < STAT_NCSKILL_TOTAL; i++)
+		if (!stricmp(pszName, NCSkillList[i]))
 			return i;
 	return -1;
 }
