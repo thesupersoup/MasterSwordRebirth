@@ -8,6 +8,10 @@
 #include "weapons/genericitem.h"
 #include "logger.h"
 #include "modeldefs.h"
+#include <time.h>
+
+const int LAST_LEARN_TIME_THRESHOLD = 5;
+time_t lastLearnSkillTime = NULL;
 
 int CBasePlayer::IdealModel()
 {
@@ -126,6 +130,17 @@ std::tuple<bool, int> CBasePlayer::LearnSkill(int iStat, int iStatType, int Enem
 			iBestSubstatId = iStatType;
 		}
 
+
+		bool shouldShowLevelUpEffects = false;
+		time_t currentTime = time(nullptr);
+		ALERT(at_console, "llst: %d, ct: %d \n", lastLearnSkillTime, currentTime);
+		if (lastLearnSkillTime == NULL || currentTime - LAST_LEARN_TIME_THRESHOLD > lastLearnSkillTime)
+		{
+			shouldShowLevelUpEffects = true;
+		}
+
+		lastLearnSkillTime = currentTime;
+
 		//set debug cvar to avoid spamming console but be able to get debug info
 		char sDebugInfo[64];
 		_snprintf(sDebugInfo, 64, "Stat: %i , Equalcount : %i , Highest EXP needed: %llf", iBestSubstatId, iEqualCount, ldHighestExpRemaining);
@@ -147,7 +162,7 @@ std::tuple<bool, int> CBasePlayer::LearnSkill(int iStat, int iStatType, int Enem
 			ALERT(at_console, "Gained XP: %i in skill %s %s \n", EnemySkillLevel, SkillStatList[iStatIdx].Name, SkillTypeList[iBestSubstatId]); //Thothie returns XP gained by monsters
 		if (std::get<0>(tbiSuccess))
 		{
-			startdbg;
+			// startdbg;
 			hudtextparms_t htp;
 			memset(&htp, 0, sizeof(hudtextparms_t));
 			htp.x = 0.02;
@@ -163,30 +178,33 @@ std::tuple<bool, int> CBasePlayer::LearnSkill(int iStat, int iStatType, int Enem
 			htp.fadeoutTime = 3.0;
 			htp.holdTime = 2.0;
 			htp.fxTime = 0.6;
-			dbg("HudMessage");
+			// dbg("HudMessage");
 			UTIL_HudMessage(this, htp, UTIL_VarArgs("%s %s +1\n", SkillStatList[iStatIdx].Name, SkillTypeList[iBestSubstatId]));
 
-			if (!is_spell_stat)
+			if (shouldShowLevelUpEffects)
 			{
-				SendInfoMsg("You become more adept at %s.\n", SkillStatList[iStatIdx].Name);
-				UTIL_HudMessage(this, htp, UTIL_VarArgs("%s %s +1\n", SkillStatList[iStatIdx].Name, SkillTypeList[iBestSubstatId]));
-			}
-			else
-			{
-				SendInfoMsg("You become more adept at %s.\n", SkillStatList[iStatIdx]);
-				UTIL_HudMessage(this, htp, UTIL_VarArgs("%s %s +1\n", SkillStatList[iStatIdx].Name, SpellTypeList[iBestSubstatId]));
-			}
+				if (!is_spell_stat)
+				{
+					SendInfoMsg("You become more adept at %s.\n", SkillStatList[iStatIdx].Name);
+					UTIL_HudMessage(this, htp, UTIL_VarArgs("%s %s +1\n", SkillStatList[iStatIdx].Name, SkillTypeList[iBestSubstatId]));
+				}
+				else
+				{
+					SendInfoMsg("You become more adept at %s.\n", SkillStatList[iStatIdx]);
+					UTIL_HudMessage(this, htp, UTIL_VarArgs("%s %s +1\n", SkillStatList[iStatIdx].Name, SpellTypeList[iBestSubstatId]));
+				}
 
-			dbg("game_learnskill");
-			msstringlist Params;
-			Params.add(SkillStatList[iStatIdx].Name);
-			if (!is_spell_stat)
-				Params.add(SkillTypeList[iBestSubstatId]);
-			else
-				Params.add(SpellTypeList[iBestSubstatId]);
-			Params.add(UTIL_VarArgs("%i", GetSkillStat(iStatIdx, iBestSubstatId)));
-			CallScriptEvent("game_learnskill", &Params);
-			enddbg;
+				// dbg("game_learnskill");
+				msstringlist Params;
+				Params.add(SkillStatList[iStatIdx].Name);
+				if (!is_spell_stat)
+					Params.add(SkillTypeList[iBestSubstatId]);
+				else
+					Params.add(SpellTypeList[iBestSubstatId]);
+				Params.add(UTIL_VarArgs("%i", GetSkillStat(iStatIdx, iBestSubstatId)));
+				CallScriptEvent("game_learnskill", &Params);
+				// enddbg;
+			}
 		}
 
 		bSkillLeveled = true;

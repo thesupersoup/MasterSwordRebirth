@@ -2771,7 +2771,8 @@ std::tuple<bool, int> CMSMonster::LearnSkill(int iStat, int iStatType, int Enemy
 	//Shuriken - Message to send the Exp because it gets f'd up at high levels.
 	//Thothie AUG2007a - this causes crash when monster kills monster (message not client)
 	//- attempting to add isplayer() conditionals
-	if (OldVal > 25 && ExpLeft < 0)
+	/*
+	if (shouldShowLevelUpEffects && OldVal > 25 && ExpLeft < 0)
 	{
 		if (IsPlayer())
 		{
@@ -2781,7 +2782,7 @@ std::tuple<bool, int> CMSMonster::LearnSkill(int iStat, int iStatType, int Enemy
 			WRITE_LONG(SubStat.Exp);
 			MESSAGE_END();
 		}
-	}
+	}*/
 
 	if (ExpLeft < 0)
 		return std::make_tuple(false, iExpRemaining);
@@ -2791,8 +2792,9 @@ std::tuple<bool, int> CMSMonster::LearnSkill(int iStat, int iStatType, int Enemy
 		SubStat.Value = STATPROP_MAX_VALUE;
 	SubStat.Exp = 0;
 
+	/*
 	//Thothie - why's this here twice? I dont see where oldval could change.
-	if (OldVal > 25)
+	if (shouldShowLevelUpEffects && OldVal > 25)
 	{
 		if (IsPlayer())
 		{
@@ -2803,6 +2805,7 @@ std::tuple<bool, int> CMSMonster::LearnSkill(int iStat, int iStatType, int Enemy
 			MESSAGE_END();
 		}
 	}
+	*/
 
 	return std::make_tuple(true, iExpRemaining);
 }
